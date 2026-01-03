@@ -7,27 +7,26 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Dancing+Script:wght@700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
-    /* --- BASE PREMIUM AESTHETIC --- */
+    /* --- BASE STYLE --- */
     body {
         min-height: 100vh; margin: 0; font-family: 'Poppins', sans-serif;
-        background-color: #fafafa; /* Insta light grey bg */
+        background-color: #fafafa;
         display: flex; flex-direction: column; align-items: center; justify-content: center;
         overflow-x: hidden;
-        background-image: radial-gradient(circle at 50% 30%, rgba(255, 215, 0, 0.05) 0%, transparent 30%);
+        /* Subtle background pattern */
+        background-image: radial-gradient(#d4af37 1px, transparent 1px);
+        background-size: 20px 20px;
     }
 
     #frame-border {
         position: fixed; top: 20px; left: 20px; right: 20px; bottom: 20px;
         border: 3px double #d4af37; border-radius: 20px; pointer-events: none; z-index: 99;
     }
-    .bg-sticker { position: fixed; font-size: 50px; opacity: 0.2; z-index: 0; filter: contrast(0.8) sepia(0.3); }
-    .s1 { top: 10%; left: 5%; transform: rotate(-15deg); } .s2 { top: 20%; right: 5%; transform: rotate(30deg); }
-    .s3 { bottom: 15%; left: 8%; transform: rotate(-10deg); } .s4 { bottom: 10%; right: 5%; transform: rotate(20deg); }
 
 
-    /* --- THE GIFT BOX STAGE (Initial State) --- */
+    /* --- GIFT BOX STAGE --- */
     .gift-stage {
-        position: relative; margin-top: 10vh; width: 300px; height: 300px;
+        position: relative; margin-top: 5vh; width: 300px; height: 300px;
         display: flex; justify-content: center; align-items: flex-end;
         perspective: 1000px; cursor: pointer; z-index: 50;
         transition: transform 0.3s;
@@ -37,115 +36,125 @@
     .box-body {
         width: 220px; height: 160px; background: linear-gradient(to bottom, #d81b60 0%, #ad1457 100%);
         border-radius: 0 0 15px 15px; position: relative; z-index: 10;
-        box-shadow: inset 0 -10px 30px rgba(0,0,0,0.3), 0 25px 50px rgba(0,0,0,0.5);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
-    .box-body::before { content:""; position: absolute; left: 50%; top: 0; bottom: 0; width: 35px; transform: translateX(-50%); background: linear-gradient(to right, #ffd700, #ffecb3, #ffd700); box-shadow: 0 0 10px rgba(0,0,0,0.2); }
+    .box-body::before { content:""; position: absolute; left: 50%; top: 0; bottom: 0; width: 35px; transform: translateX(-50%); background: #ffd700; box-shadow: 0 0 5px rgba(0,0,0,0.2); }
+    
     .box-lid {
         width: 240px; height: 60px; background: linear-gradient(to bottom, #ec407a, #d81b60);
         position: absolute; top: 80px; left: 30px; border-radius: 10px; z-index: 11;
-        box-shadow: 0 15px 25px rgba(0,0,0,0.3), inset 0 2px 5px rgba(255,255,255,0.2);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         transform-origin: bottom center; transition: all 0.5s ease;
     }
-    .box-lid::before { content:""; position: absolute; left: 50%; top: 0; bottom: 0; width: 35px; transform: translateX(-50%); background: linear-gradient(to right, #ffd700, #ffecb3, #ffd700); }
-    .box-bow { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); font-size: 60px; color: #ffd700; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3)); z-index: 12; }
+    .box-lid::before { content:""; position: absolute; left: 50%; top: 0; bottom: 0; width: 35px; transform: translateX(-50%); background: #ffd700; }
+    .box-bow { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); font-size: 60px; color: #ffd700; z-index: 12; }
     
     .instruction {
-        font-family: 'Dancing Script', cursive; color: #d63384; font-size: 24px; margin-top: 30px;
-        animation: pulse 1.5s infinite alternate; position: absolute; bottom: 15vh; width: 100%; text-align: center;
+        font-family: 'Dancing Script', cursive; color: #d63384; font-size: 26px; font-weight: bold;
+        animation: pulse 1.5s infinite alternate; position: absolute; bottom: 20vh; width: 100%; text-align: center;
+        text-shadow: 1px 1px 0px white;
     }
     @keyframes pulse { from{transform: scale(1);} to{transform: scale(1.1);} }
 
 
-    /* --- NEW: INSTAGRAM FEED CONTAINER --- */
+    /* --- FEED CONTAINER --- */
     .feed-container {
         position: absolute; top: 0; width: 100%; height: 100vh;
-        overflow-y: auto; /* Allow scrolling */
-        padding: 80px 0 100px 0; /* Space for header/footer buttons */
-        display: flex; flex-direction: column; align-items: center; gap: 30px;
+        overflow-y: auto;
+        padding: 60px 0 120px 0; /* Extra padding at bottom for button */
+        display: flex; flex-direction: column; align-items: center; gap: 25px;
         opacity: 0; pointer-events: none; z-index: 10;
-        scrollbar-width: none; /* Hide scrollbar for aesthetic */
     }
-    .feed-container::-webkit-scrollbar { display: none; }
-
+    
+    /* Header Title */
     .feed-title {
         text-align: center; font-family: 'Cinzel', serif; color: #d63384; font-size: 28px;
-        margin-bottom: 10px; text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
+        margin-bottom: 10px; background: white; padding: 10px 20px; border-radius: 20px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 1px solid #d4af37;
     }
 
-    /* --- INSTA POST STYLES --- */
+    /* --- INSTA POST CARD --- */
     .insta-post {
-        background: white;
-        width: 90%; max-width: 450px; /* Typical phone width */
-        border-radius: 12px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-        border: 1px solid #eee;
+        background: #ffffff;
+        width: 90%; max-width: 450px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        border: 1px solid #e0e0e0;
         overflow: hidden;
-        opacity: 0; /* Hidden for animation */
-        transform: translateY(50px);
+        opacity: 0; /* Hidden initially */
+        transform: translateY(30px);
     }
 
     .insta-header {
         display: flex; align-items: center; padding: 12px; border-bottom: 1px solid #f0f0f0;
     }
     .insta-profile-pic {
-        width: 35px; height: 35px; border-radius: 50%; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-        display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; margin-right: 10px;
+        width: 40px; height: 40px; border-radius: 50%; 
+        background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; margin-right: 12px;
     }
-    .insta-username { font-weight: 600; font-size: 14px; color: #262626; }
+    .insta-username { font-weight: 700; font-size: 15px; color: #000; font-family: 'Poppins', sans-serif;}
 
-    .insta-image-container img {
-        width: 100%; height: auto; display: block;
-        /* Filter for the photos to look cohesive */
-        filter: sepia(10%) contrast(1.05);
-    }
-    /* Special style for the final message "image" area */
+    .insta-image-container img { width: 100%; height: auto; display: block; }
+    
     .final-message-visual {
-        width: 100%; padding: 60px 20px; text-align: center;
-        background: linear-gradient(135deg, #ffdde1, #ee9ca7);
-        font-size: 50px;
+        width: 100%; padding: 50px 20px; text-align: center;
+        background: linear-gradient(135deg, #fff0f3, #ffe4e1);
+        font-size: 60px; letter-spacing: 5px;
     }
 
-    .insta-actions {
-        padding: 12px 12px 0; font-size: 22px; color: #262626;
-    }
+    .insta-actions { padding: 10px 15px 0; font-size: 24px; color: #333; }
     .liked-heart { color: #ed4956; margin-right: 15px; }
     
     .insta-caption {
-        padding: 10px 12px 20px; font-size: 14px; color: #262626; line-height: 1.4;
+        padding: 10px 15px 20px; font-size: 15px; color: #000; line-height: 1.5;
     }
-    .caption-username { font-weight: 700; margin-right: 5px; }
-    .caption-text { font-family: 'Poppins', sans-serif; color: #444; }
-    .special-caption { font-family: 'Dancing Script', cursive; font-size: 18px; color: #d63384; }
+    .caption-username { font-weight: 700; margin-right: 6px; color: #000; }
+    
+    /* Fixed text visibility */
+    .caption-text { 
+        font-family: 'Poppins', sans-serif; 
+        color: #333; /* Dark grey */
+        font-weight: 400;
+    }
+    .special-caption { 
+        font-family: 'Dancing Script', cursive; 
+        font-size: 22px; 
+        color: #d63384; /* Pink */
+        font-weight: bold;
+    }
 
 
-    /* --- ANIMATION CLASSES --- */
-    .lid-open-realistic { animation: openRealistic 1.5s forwards cubic-bezier(0.25, 0.8, 0.25, 1); }
-    @keyframes openRealistic { 0% { transform: translateY(0) rotateX(0); } 100% { transform: translateY(-400px) rotateX(-45deg) scale(0.8); opacity: 0; } }
+    /* --- ANIMATIONS --- */
+    .lid-open-realistic { animation: openRealistic 1.2s forwards; }
+    @keyframes openRealistic { 0% { transform: translateY(0) rotateX(0); } 100% { transform: translateY(-400px) rotateX(-45deg); opacity: 0; } }
 
-    .vanish-box { animation: vanishStage 1s ease-in forwards 0.3s; }
-    @keyframes vanishStage { to { opacity: 0; transform: scale(0.5) translateY(100px); } }
+    .vanish-box { animation: vanishStage 0.8s ease-in forwards 0.2s; }
+    @keyframes vanishStage { to { opacity: 0; transform: scale(0.8) translateY(50px); } }
 
-    .show-feed { animation: fadeIn 1s ease forwards 1s; pointer-events: all; }
+    /* Faster feed appearance */
+    .show-feed { animation: fadeIn 0.5s ease forwards 0.5s; pointer-events: all; }
     @keyframes fadeIn { to { opacity: 1; } }
 
-    .slide-in-post { animation: slideUpFade 0.8s ease-out forwards; }
-    @keyframes slideUpFade { from { opacity:0; transform:translateY(70px); } to { opacity:1; transform:translateY(0); } }
+    .slide-in-post { animation: slideUpFade 0.6s ease-out forwards; }
+    @keyframes slideUpFade { from { opacity:0; transform:translateY(50px); } to { opacity:1; transform:translateY(0); } }
 
-    .confetti { position: fixed; top: -20px; width: 12px; height: 12px; background: gold; z-index: 100; pointer-events: none; animation: fall 4s linear forwards; }
+    .confetti { position: fixed; top: -20px; width: 10px; height: 10px; background: gold; z-index: 100; pointer-events: none; animation: fall 3s linear forwards; }
     @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
 
 
-    /* Next Button (Fixed at bottom) */
+    /* --- NEXT BUTTON --- */
     .next-btn-container {
         position: fixed; bottom: 0; left:0; width: 100%; padding: 20px;
-        background: linear-gradient(to top, #fafafa 60%, transparent); /* Fade effect */
+        background: linear-gradient(to top, #ffffff 80%, transparent);
         display: flex; justify-content: center; z-index: 150;
         opacity: 0; pointer-events: none; transition: 0.5s;
     }
     .next-btn {
-        padding: 12px 40px; background: linear-gradient(45deg, #d63384, #ffd700);
+        padding: 12px 45px; background: linear-gradient(45deg, #d63384, #ffd700);
         border: none; color: white; border-radius: 30px; font-family: 'Poppins', sans-serif;
-        cursor: pointer; font-size: 18px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        cursor: pointer; font-size: 18px; box-shadow: 0 5px 20px rgba(214, 51, 132, 0.4);
+        font-weight: 600;
     }
     .show-btn-cont { opacity: 1; pointer-events: all; }
 
@@ -158,74 +167,69 @@
     </audio>
 
     <div id="frame-border"></div>
-    <div class="bg-sticker s1">✨</div> <div class="bg-sticker s2">🌸</div>
-    <div class="bg-sticker s3">🎁</div> <div class="bg-sticker s4">🌿</div>
-
 
     <div class="gift-stage" onclick="openGift()">
         <div class="box-lid" id="lid"><div class="box-bow">🎀</div></div>
         <div class="box-body"></div>
     </div>
-    <div class="instruction" id="instruction">Tap to unlock our memories ✨</div>
+    <div class="instruction" id="instruction">Tap to unlock memories ✨</div>
 
 
     <div class="feed-container" id="feed-container">
-        <h1 class="feed-title">Riya's Birthday Feed</h1>
+        <div class="feed-title">Riya's Birthday Feed</div>
 
         <div class="insta-post" id="post1">
             <div class="insta-header">
-                <div class="insta-profile-pic">🎂</div>
-                <div class="insta-username">Us_Moments</div>
+                <div class="insta-profile-pic">R</div>
+                <div class="insta-username">Us_Memories</div>
             </div>
             <div class="insta-image-container">
                 <img src="us_photo1.jpg" alt="Memory 1">
             </div>
-            <div class="insta-actions"><span class="liked-heart">❤️</span> 💬 ↗️</div>
+            <div class="insta-actions"><span class="liked-heart">❤️</span> 💬</div>
             <div class="insta-caption">
-                <span class="caption-username">bestie_diaries:</span> 
+                <span class="caption-username">besties:</span> 
                 <span class="caption-text">Do you remember this day? We laughed so much our stomachs hurt! Best time ever. 😂</span>
             </div>
         </div>
 
         <div class="insta-post" id="post2">
             <div class="insta-header">
-                <div class="insta-profile-pic">🎂</div>
-                <div class="insta-username">Us_Moments</div>
+                <div class="insta-profile-pic">R</div>
+                <div class="insta-username">Us_Memories</div>
             </div>
             <div class="insta-image-container">
                 <img src="us_photo2.jpg" alt="Memory 2">
             </div>
-            <div class="insta-actions"><span class="liked-heart">❤️</span> 💬 ↗️</div>
+            <div class="insta-actions"><span class="liked-heart">❤️</span> 💬</div>
             <div class="insta-caption">
-                <span class="caption-username">bestie_diaries:</span>
+                <span class="caption-username">besties:</span>
                 <span class="caption-text">Just a random click, but it captures how comfortable silence is with you. 📸</span>
             </div>
         </div>
 
         <div class="insta-post" id="post3">
             <div class="insta-header">
-                <div class="insta-profile-pic">🎂</div>
-                <div class="insta-username">Us_Moments</div>
+                <div class="insta-profile-pic">R</div>
+                <div class="insta-username">Us_Memories</div>
             </div>
             <div class="insta-image-container">
                 <img src="us_photo3.jpg" alt="Memory 3">
             </div>
-            <div class="insta-actions"><span class="liked-heart">❤️</span> 💬 ↗️</div>
+            <div class="insta-actions"><span class="liked-heart">❤️</span> 💬</div>
             <div class="insta-caption">
-                <span class="caption-username">bestie_diaries:</span>
-                <span class="caption-text">Here's to creating a million more memories like these. ❤️</span>
+                <span class="caption-username">besties:</span>
+                <span class="caption-text">Here's to creating a million more memories like these. Love you! ❤️</span>
             </div>
         </div>
 
         <div class="insta-post" id="post4">
             <div class="insta-header">
-                <div class="insta-profile-pic" style="background: #d4af37;">✨</div>
+                <div class="insta-profile-pic" style="background:#d4af37">✨</div>
                 <div class="insta-username">Birthday_Wishes</div>
             </div>
-            <div class="final-message-visual">
-                💐🌹🌺🌷🌸
-            </div>
-            <div class="insta-actions"><span class="liked-heart">❤️</span> 💬 ↗️</div>
+            <div class="final-message-visual">💐🌹🌺</div>
+            <div class="insta-actions"><span class="liked-heart">❤️</span> 💬</div>
             <div class="insta-caption">
                 <span class="caption-username">Only_Yours:</span>
                 <span class="caption-text special-caption">Virtual flowers for the most beautiful flower. May all your birthday wishes come true, Princess. 🌹✨</span>
@@ -233,7 +237,6 @@
         </div>
 
     </div>
-
 
     <div class="next-btn-container" id="btn-cont">
         <button class="next-btn" onclick="window.location.href='page5.html'">One Last Thing... ➔</button>
@@ -263,29 +266,28 @@
             launchConfetti();
             stage.classList.add('vanish-box');
 
-            // Show Feed Container
+            // Show Feed Faster
             feedCont.classList.add('show-feed');
 
-            // Sequence Posts
-            setTimeout(() => { p1.classList.add('slide-in-post'); }, 1500);
-            setTimeout(() => { p2.classList.add('slide-in-post'); }, 2200);
-            setTimeout(() => { p3.classList.add('slide-in-post'); }, 2900);
-            setTimeout(() => { p4.classList.add('slide-in-post'); }, 3600); // Final Message Post
+            // Sequence Posts (Faster timing)
+            setTimeout(() => { p1.classList.add('slide-in-post'); }, 800);
+            setTimeout(() => { p2.classList.add('slide-in-post'); }, 1400);
+            setTimeout(() => { p3.classList.add('slide-in-post'); }, 2000);
+            setTimeout(() => { p4.classList.add('slide-in-post'); }, 2600);
 
-            // Show Button Last
-            setTimeout(() => { btnCont.classList.add('show-btn-cont'); }, 4500);
+            // Show Button
+            setTimeout(() => { btnCont.classList.add('show-btn-cont'); }, 3200);
         }
 
         function launchConfetti() {
             const colors = ['#ff4081', '#ffd700', '#50c878', '#9c27b0'];
-            for(let i=0; i<150; i++) {
+            for(let i=0; i<100; i++) {
                 let div = document.createElement('div');
                 div.classList.add('confetti');
                 div.style.left = Math.random() * 100 + 'vw';
                 div.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                div.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                div.style.animationDelay = Math.random() * 1.5 + 's';
-                if(Math.random() > 0.5) div.style.borderRadius = '50%';
+                div.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                div.style.animationDelay = Math.random() * 1 + 's';
                 document.body.appendChild(div);
             }
         }
