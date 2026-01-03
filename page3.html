@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Beautiful Soul</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Dancing+Script:wght@600;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+    /* --- BASE AESTHETIC --- */
+    body {
+        min-height: 100vh; margin: 0; font-family: 'Poppins', sans-serif;
+        background-color: #fdf6e3; overflow-x: hidden;
+        background-image: 
+            url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.05"/></svg>'),
+            radial-gradient(circle at 50% 50%, rgba(214, 51, 132, 0.05) 10%, transparent 10%),
+            linear-gradient(to right, rgba(255,255,255,0.2) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255,255,255,0.2) 1px, transparent 1px);
+        background-size: auto, auto, 50px 50px, 50px 50px;
+        padding-bottom: 50px;
+    }
+
+    #frame-border {
+        position: fixed; top: 20px; left: 20px; right: 20px; bottom: 20px;
+        border: 3px double #d4af37; border-radius: 20px; pointer-events: none; z-index: 99;
+    }
+    .bg-sticker { position: fixed; font-size: 50px; opacity: 0.3; z-index: 0; filter: contrast(0.8) sepia(0.3); }
+    .s1 { top: 5%; left: 2%; transform: rotate(-15deg); } .s2 { top: 25%; right: 2%; transform: rotate(30deg); }
+    .s3 { bottom: 15%; left: 5%; transform: rotate(-10deg); } .s4 { bottom: 5%; right: 8%; transform: rotate(20deg); }
+
+
+    /* --- HEADER SECTION --- */
+    .header-section {
+        display: flex; align-items: center; justify-content: center;
+        margin: 40px auto 60px; width: 90%; max-width: 800px;
+        background: rgba(255,255,255,0.6); padding: 20px;
+        border-radius: 50px; border: 2px solid #d4af37;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        opacity: 0; animation: fadeDown 1s ease forwards 0.5s;
+    }
+    .header-pic-frame {
+        width: 100px; height: 100px; border-radius: 50%; overflow: hidden;
+        border: 4px solid #d4af37; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin-right: 20px;
+    }
+    .header-pic-frame img { width: 100%; height: 100%; object-fit: cover; filter: sepia(20%); }
+    .header-text h1 { font-family: 'Cinzel', serif; color: #d63384; margin: 0; font-size: 28px; }
+    .header-text h2 { font-family: 'Dancing Script', cursive; color: #d4af37; margin: 5px 0 0; font-size: 24px; }
+    @keyframes fadeDown { from{opacity:0; transform:translateY(-30px);} to{opacity:1; transform:translateY(0);} }
+
+
+    /* --- MAIN GRID LAYOUT --- */
+    .main-container {
+        width: 90%; max-width: 900px; margin: 0 auto;
+        display: grid; grid-template-columns: 1fr 1fr; gap: 50px;
+        position: relative; z-index: 10;
+    }
+    .collage-item { opacity: 0; }
+
+
+    /* --- NEW PREMIUM IMAGE STYLES --- */
+    
+    /* Common Photo Styles */
+    .photo-base { position: relative; transition: transform 0.3s; z-index: 5; }
+    .photo-base:hover { transform: scale(1.05) rotate(0deg) !important; z-index: 25; }
+    .photo-base img { width: 100%; height: auto; display: block; }
+
+    /* Style 1: Ornate Gold Frame */
+    .style-ornate {
+        padding: 12px;
+        background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.25); border-radius: 4px;
+    }
+    .style-ornate img { border: 3px solid #fff; filter: sepia(30%); }
+
+    /* Style 2: Classic Polaroid */
+    .style-polaroid {
+        background: #fff; padding: 15px 15px 60px 15px;
+        box-shadow: 5px 10px 20px rgba(0,0,0,0.15);
+    }
+    .style-polaroid::after {
+        content: "Pure Joy"; position: absolute; bottom: 15px; left: 0; right: 0;
+        text-align: center; font-family: 'Dancing Script', cursive; color: #888; font-size: 20px;
+    }
+    .style-polaroid img { filter: grayscale(20%) contrast(1.1); }
+
+    /* Style 3: Ripped Paper Edge */
+    .style-ripped {
+        background: #fff; padding: 8px;
+        /* Jagged clip path */
+        clip-path: polygon(2% 0%, 98% 1%, 100% 98%, 85% 99%, 80% 97%, 75% 99%, 70% 97%, 65% 99%, 60% 97%, 55% 99%, 50% 97%, 45% 99%, 40% 97%, 35% 99%, 30% 97%, 25% 99%, 20% 97%, 15% 99%, 10% 97%, 5% 99%, 0% 98%);
+        filter: drop-shadow(5px 10px 15px rgba(0,0,0,0.2));
+    }
+    .style-ripped img { filter: contrast(1.2); }
+
+    /* Style 4: Elegant Layered Shadow */
+    .style-layered {
+        padding: 10px; background: #fff; border: 1px solid #d4af37;
+    }
+    .style-layered::before {
+        content:""; position: absolute; top:15px; left:15px; width:100%; height:100%;
+        background: rgba(212, 175, 55, 0.3); z-index: -1; filter: blur(2px);
+    }
+    .style-layered img { filter: sepia(10%) brightness(1.1); }
+
+
+    /* --- TEXT BOX STYLES --- */
+    .text-box {
+        padding: 25px; background: rgba(255,255,255,0.92);
+        border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        border: 2px dotted #d4af37; z-index: 4;
+        display: flex; align-items: center;
+    }
+    .hinglish-text { font-family: 'Poppins', sans-serif; font-size: 16px; color: #444; line-height: 1.6; margin: 0;}
+    .highlight { color: #d63384; font-weight: 600; font-family: 'Dancing Script', cursive; font-size: 24px;}
+
+
+    /* --- LAYOUT POSITIONS --- */
+    #p1 { grid-column: 1; transform: rotate(-3deg); justify-self: end; }
+    #t1 { grid-column: 2; margin-top: 30px; margin-left: -40px; }
+
+    #t2 { grid-column: 1; margin-top: 30px; margin-right: -40px; text-align: right; z-index: 6;}
+    #p2 { grid-column: 2; transform: rotate(4deg); justify-self: start;}
+
+    #p3 { grid-column: 1; transform: rotate(-2deg); justify-self: end; margin-top: 20px;}
+    #t3 { grid-column: 2; margin-top: 50px; margin-left: -30px; }
+
+    #t4 { grid-column: 1; margin-top: 40px; margin-right: -50px; text-align: right; z-index: 6;}
+    #p4 { grid-column: 2; transform: rotate(2deg); justify-self: start; margin-top: 20px;}
+
+
+    /* --- ANIMATIONS --- */
+    .anim-float { animation: floatUp 1.2s ease forwards 2s; }
+    @keyframes floatUp { from{opacity:0; transform: translateY(40px);} to{opacity:1; transform: translateY(0);} }
+
+    .anim-unfold { transform-origin: top center; animation: unfold 1s ease-out forwards 3.5s; }
+    @keyframes unfold { from{opacity:0; transform: scaleY(0);} to{opacity:1; transform: scaleY(1);} }
+
+    .anim-focus { animation: focusIn 1.5s ease forwards 5s; }
+    @keyframes focusIn { from{opacity:0; filter:blur(10px); transform:scale(0.9);} to{opacity:1; filter:blur(0); transform:scale(1);} }
+
+    .anim-twist { animation: twistSlide 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 6.5s; }
+    @keyframes twistSlide { from{opacity:0; transform: translateX(100px) rotate(20deg);} to{opacity:1; transform: translateX(0) rotate(0deg);} }
+
+    .photo-appear { animation: fadeInPhoto 1s ease forwards; }
+    @keyframes fadeInPhoto { from{opacity:0; transform: scale(0.9);} to{opacity:1; transform: scale(1);} }
+
+
+    /* --- THE FINAL LETTER SECTION (TOP-TO-BOTTOM WRITING) --- */
+    .letter-section {
+        width: 90%; max-width: 700px; margin: 100px auto 50px;
+        position: relative; padding: 50px;
+        background-color: #fff;
+        background-image: linear-gradient(#e4e4e4 1px, transparent 1px);
+        background-size: 100% 28px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        transform: rotate(1deg);
+        border-left: 3px solid #ffaa9f;
+        opacity: 0; animation: fadeDown 1.5s ease forwards 8s;
+    }
+    .letter-pin {
+        position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 30px; height: 30px;
+        background: radial-gradient(circle at 30% 30%, #d4af37, #8B4513); border-radius: 50%;
+        box-shadow: 2px 3px 8px rgba(0,0,0,0.3); z-index: 10;
+    }
+
+    /* --- REALISTIC TOP-TO-BOTTOM WRITING ANIMATION --- */
+    .gel-pen-text-container {
+        position: relative;
+        font-family: 'Dancing Script', cursive; font-size: 30px;
+        color: #000080; line-height: 28px;
+    }
+
+    /* The Mask that wipes down from top to bottom */
+    .writing-mask {
+        position: absolute; top: 0; left: 0; width: 100%;
+        height: 100%; /* Starts full height, covering everything */
+        background: #fff;
+        background-image: linear-gradient(#e4e4e4 1px, transparent 1px);
+        background-size: 100% 28px;
+        border-left: 3px solid #ffaa9f;
+        /* The animation that reduces height from 100% to 0% */
+        animation: wipeDownWriting 12s ease-in-out forwards 9.5s;
+    }
+
+    @keyframes wipeDownWriting {
+        from { height: 100%; }
+        to { height: 0%; } /* Text revealed from top to bottom */
+    }
+
+    .shayari-box {
+        margin: 30px auto; padding: 20px;
+        border-top: 2px dashed #000080; border-bottom: 2px dashed #000080;
+        text-align: center; font-size: 34px;
+    }
+
+    /* --- NEXT BUTTON --- */
+    .next-btn {
+        display: block; margin: 50px auto; padding: 15px 50px;
+        background: linear-gradient(45deg, #d63384, #e66767);
+        color: white; border: none; border-radius: 30px;
+        font-family: 'Poppins', sans-serif; font-size: 20px; cursor: pointer;
+        box-shadow: 0 5px 15px rgba(214, 51, 132, 0.3);
+        transition: transform 0.2s; opacity: 0; animation: floatUp 1s ease forwards 22s;
+    }
+    .next-btn:hover { transform: scale(1.05); }
+
+</style>
+</head>
+<body>
+
+    <audio autoplay loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="frame-border"></div>
+    <div class="bg-sticker s1">🌸</div> <div class="bg-sticker s2">✨</div>
+    <div class="bg-sticker s3">🦋</div> <div class="bg-sticker s4">🌿</div>
+
+
+    <div class="header-section">
+         <div class="header-pic-frame">
+             <img src="her_photo1.jpg" alt="Riya">
+         </div>
+         <div class="header-text">
+             <h1>Happy Birthday Riya</h1>
+             <h2>My Bestest Friend</h2>
+         </div>
+    </div>
+
+
+    <div class="main-container">
+
+        <div id="p1" class="collage-item photo-base style-ornate photo-appear" style="animation-delay: 1.5s;">
+            <img src="her_photo1.jpg" alt="Photo 1">
+        </div>
+        <div id="t1" class="collage-item text-box anim-float">
+            <p class="hinglish-text">Tumhari yeh <span class="highlight">Smile</span> sach mein magical hai. Jab tum hasti ho na Riya, toh aas-paas sab kuch bright lagta hai.</p>
+        </div>
+
+        <div id="t2" class="collage-item text-box anim-unfold">
+            <p class="hinglish-text">Sirf dikhne mein hi nahi, tum dil ki bhi bahut achi ho. Your <span class="highlight">Kindness</span> is what makes you truly beautiful.</p>
+        </div>
+        <div id="p2" class="collage-item photo-base style-polaroid photo-appear" style="animation-delay: 3s;">
+             <img src="her_photo2.jpg" alt="Photo 2">
+        </div>
+
+        <div id="p3" class="collage-item photo-base style-ripped photo-appear" style="animation-delay: 4.5s;">
+             <img src="her_photo3.jpg" alt="Photo 3">
+        </div>
+        <div id="t3" class="collage-item text-box anim-focus">
+            <p class="hinglish-text">Kabhi kabhi lagta hai tum real nahi ho, ekdum kisi <span class="highlight">Pari (Angel)</span> jaisi. You have a pure and genuine soul.</p>
+        </div>
+
+        <div id="t4" class="collage-item text-box anim-twist">
+            <p class="hinglish-text">You are a flawless piece of art. Meri life ki sabse <span class="highlight">Special Person</span>. You make everything better.</p>
+        </div>
+        <div id="p4" class="collage-item photo-base style-layered photo-appear" style="animation-delay: 6s;">
+             <img src="her_photo4.jpg" alt="Photo 4">
+        </div>
+
+    </div>
+
+
+    <div class="letter-section">
+        <div class="letter-pin"></div>
+        
+        <div class="gel-pen-text-container">
+            <div class="writing-mask"></div>
+            
+            Dear Riya,
+            <br><br>
+            Mujhe aaj bhi yakeen nahi hota ki main kitna lucky hoon jo tum meri life mein aayi. Class 9 se tumhe dekh raha tha, par kabhi socha nahi tha ki hum itne ache dost banenge.
+            <br><br>
+            May 2024 se pehle life bas chal rahi thi, par tumhare aane ke baad sab kuch special lagta hai. Tum sirf meri best friend nahi ho, tum mere liye usse badhkar ho.
+            <br><br>
+            
+            <div class="shayari-box">
+                "Khuda ne badi fursat se banaya hai tumhe,<br>
+                Meri har dua ka jawab banaya hai tumhe.<br>
+                Duniya ke liye shayad tum bas ek insaan ho,<br>
+                Par mere liye... puri duniya banaya hai tumhe."
+            </div>
+            <br>
+            Thank you for being YOU. Main hamesha chahunga ki tum aise hi hasti raho. I'm the luckiest guy to have you.
+            <br><br>
+            Happy Birthday once again, Princess. ❤️
+            <br>
+            <span style="font-size: 24px; float: right;">- Only Yours.</span>
+            <br style="clear: both;">
+        </div>
+    </div>
+
+    <button class="next-btn" onclick="window.location.href='page4.html'">Open Final Gift ➔</button>
+
+</body>
+</html>
