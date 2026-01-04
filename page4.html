@@ -3,19 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Our Memories Feed</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Dancing+Script:wght@700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<title>Our Memories</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;600&family=Great+Vibes&display=swap" rel="stylesheet">
 
 <style>
-    /* --- BASE STYLE --- */
+    /* --- BASE AESTHETIC --- */
     body {
         min-height: 100vh; margin: 0; font-family: 'Poppins', sans-serif;
-        background-color: #fafafa;
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        background-color: #fdf6e3;
+        display: flex; flex-direction: column; align-items: center; justify-content: flex-start; /* Changed to flex-start for scrolling */
         overflow-x: hidden;
-        /* Subtle background pattern */
-        background-image: radial-gradient(#d4af37 1px, transparent 1px);
-        background-size: 20px 20px;
+        /* Premium grain & light background */
+        background-image: 
+            radial-gradient(circle at 50% 50%, rgba(214, 51, 132, 0.05) 0%, transparent 50%),
+            url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.05"/></svg>');
     }
 
     #frame-border {
@@ -23,22 +24,28 @@
         border: 3px double #d4af37; border-radius: 20px; pointer-events: none; z-index: 99;
     }
 
-
-    /* --- GIFT BOX STAGE --- */
+    /* --- GIFT BOX STAGE (Centered) --- */
+    .gift-stage-container {
+        height: 100vh; width: 100%; display: flex; align-items: center; justify-content: center;
+        position: absolute; top: 0; left: 0; z-index: 50;
+        transition: opacity 1s;
+    }
+    
     .gift-stage {
-        position: relative; margin-top: 5vh; width: 300px; height: 300px;
+        position: relative; width: 300px; height: 300px;
         display: flex; justify-content: center; align-items: flex-end;
-        perspective: 1000px; cursor: pointer; z-index: 50;
+        perspective: 1000px; cursor: pointer;
         transition: transform 0.3s;
     }
-    .gift-stage:hover { transform: scale(1.02); }
+    .gift-stage:hover { transform: scale(1.05); }
 
+    /* Box Styles */
     .box-body {
         width: 220px; height: 160px; background: linear-gradient(to bottom, #d81b60 0%, #ad1457 100%);
         border-radius: 0 0 15px 15px; position: relative; z-index: 10;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.4);
     }
-    .box-body::before { content:""; position: absolute; left: 50%; top: 0; bottom: 0; width: 35px; transform: translateX(-50%); background: #ffd700; box-shadow: 0 0 5px rgba(0,0,0,0.2); }
+    .box-body::before { content:""; position: absolute; left: 50%; top: 0; bottom: 0; width: 35px; transform: translateX(-50%); background: #ffd700; box-shadow: 0 0 10px rgba(0,0,0,0.2); }
     
     .box-lid {
         width: 240px; height: 60px; background: linear-gradient(to bottom, #ec407a, #d81b60);
@@ -47,116 +54,132 @@
         transform-origin: bottom center; transition: all 0.5s ease;
     }
     .box-lid::before { content:""; position: absolute; left: 50%; top: 0; bottom: 0; width: 35px; transform: translateX(-50%); background: #ffd700; }
-    .box-bow { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); font-size: 60px; color: #ffd700; z-index: 12; }
+    .box-bow { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); font-size: 60px; color: #ffd700; z-index: 12; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3)); }
     
     .instruction {
-        font-family: 'Dancing Script', cursive; color: #d63384; font-size: 26px; font-weight: bold;
-        animation: pulse 1.5s infinite alternate; position: absolute; bottom: 20vh; width: 100%; text-align: center;
-        text-shadow: 1px 1px 0px white;
+        font-family: 'Dancing Script', cursive; color: #d63384; font-size: 28px;
+        position: absolute; bottom: -60px; width: 100%; text-align: center;
+        animation: pulse 1.5s infinite alternate;
     }
-    @keyframes pulse { from{transform: scale(1);} to{transform: scale(1.1);} }
+    @keyframes pulse { from{opacity:0.6;} to{opacity:1;} }
 
 
-    /* --- FEED CONTAINER --- */
-    .feed-container {
-        position: absolute; top: 0; width: 100%; height: 100vh;
-        overflow-y: auto;
-        padding: 60px 0 120px 0; /* Extra padding at bottom for button */
-        display: flex; flex-direction: column; align-items: center; gap: 25px;
-        opacity: 0; pointer-events: none; z-index: 10;
+    /* --- THE INTRO SEQUENCE MESSAGE --- */
+    .intro-message {
+        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        font-family: 'Great Vibes', cursive; /* Premium Calligraphy */
+        font-size: 38px; color: #d4af37; text-align: center;
+        width: 90%;
+        opacity: 0; pointer-events: none; z-index: 60;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+
+    /* --- MEMORIES LAYOUT (Zig-Zag) --- */
+    .memories-container {
+        width: 90%; max-width: 800px;
+        padding-top: 100px; padding-bottom: 120px; /* Space for scroll */
+        display: none; /* Hidden initially */
+        flex-direction: column; gap: 80px;
+        z-index: 40;
+    }
+
+    /* Memory Card Style */
+    .memory-row {
+        display: flex; align-items: center; justify-content: center;
+        gap: 20px; opacity: 0; /* Hidden for animation */
     }
     
-    /* Header Title */
-    .feed-title {
-        text-align: center; font-family: 'Cinzel', serif; color: #d63384; font-size: 28px;
-        margin-bottom: 10px; background: white; padding: 10px 20px; border-radius: 20px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 1px solid #d4af37;
-    }
+    /* Layout Flipping */
+    .row-left { flex-direction: row; }
+    .row-right { flex-direction: row-reverse; }
 
-    /* --- INSTA POST CARD --- */
-    .insta-post {
-        background: #ffffff;
-        width: 90%; max-width: 450px;
+    /* The Photo */
+    .photo-wrapper {
+        position: relative; width: 45%;
+        background: white; padding: 10px 10px 40px 10px; /* Polaroid feel */
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        transform: rotate(-3deg); transition: transform 0.3s;
+    }
+    .photo-wrapper img { width: 100%; height: auto; display: block; filter: sepia(15%); }
+    .row-right .photo-wrapper { transform: rotate(3deg); }
+    .photo-wrapper:hover { transform: scale(1.05) rotate(0deg); z-index: 10; }
+
+    /* The Note (Glass Effect) */
+    .note-wrapper {
+        width: 45%; padding: 20px;
+        background: rgba(255, 255, 255, 0.6); /* Glassy */
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(212, 175, 55, 0.4); /* Gold Border */
         border-radius: 15px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        border: 1px solid #e0e0e0;
-        overflow: hidden;
-        opacity: 0; /* Hidden initially */
-        transform: translateY(30px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        position: relative;
+    }
+    .note-text {
+        font-family: 'Dancing Script', cursive; font-size: 22px; color: #4a4a4a;
+        line-height: 1.6; text-align: center;
+    }
+    .note-wrapper::before {
+        content: "♥"; position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+        background: white; color: #d63384; font-size: 16px; padding: 2px 8px; border-radius: 10px;
+        border: 1px solid #d4af37;
     }
 
-    .insta-header {
-        display: flex; align-items: center; padding: 12px; border-bottom: 1px solid #f0f0f0;
+    /* Special Final Message Style */
+    .final-row { flex-direction: column; text-align: center; margin-top: 20px; }
+    .final-card {
+        width: 80%; background: #fff0f5; border: 2px dashed #d63384; padding: 30px;
+        border-radius: 20px; box-shadow: 0 10px 30px rgba(214, 51, 132, 0.15);
+        transform: rotate(0deg) !important;
     }
-    .insta-profile-pic {
-        width: 40px; height: 40px; border-radius: 50%; 
-        background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-        display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; margin-right: 12px;
-    }
-    .insta-username { font-weight: 700; font-size: 15px; color: #000; font-family: 'Poppins', sans-serif;}
-
-    .insta-image-container img { width: 100%; height: auto; display: block; }
-    
-    .final-message-visual {
-        width: 100%; padding: 50px 20px; text-align: center;
-        background: linear-gradient(135deg, #fff0f3, #ffe4e1);
-        font-size: 60px; letter-spacing: 5px;
-    }
-
-    .insta-actions { padding: 10px 15px 0; font-size: 24px; color: #333; }
-    .liked-heart { color: #ed4956; margin-right: 15px; }
-    
-    .insta-caption {
-        padding: 10px 15px 20px; font-size: 15px; color: #000; line-height: 1.5;
-    }
-    .caption-username { font-weight: 700; margin-right: 6px; color: #000; }
-    
-    /* Fixed text visibility */
-    .caption-text { 
-        font-family: 'Poppins', sans-serif; 
-        color: #333; /* Dark grey */
-        font-weight: 400;
-    }
-    .special-caption { 
-        font-family: 'Dancing Script', cursive; 
-        font-size: 22px; 
-        color: #d63384; /* Pink */
-        font-weight: bold;
+    .final-text {
+        font-family: 'Great Vibes', cursive; font-size: 32px; color: #d63384;
     }
 
 
     /* --- ANIMATIONS --- */
-    .lid-open-realistic { animation: openRealistic 1.2s forwards; }
-    @keyframes openRealistic { 0% { transform: translateY(0) rotateX(0); } 100% { transform: translateY(-400px) rotateX(-45deg); opacity: 0; } }
+    
+    /* 1. Lid Fly */
+    .lid-open { animation: flyLid 1s forwards; }
+    @keyframes flyLid { to { transform: translateY(-300px) rotate(-20deg); opacity: 0; } }
 
-    .vanish-box { animation: vanishStage 0.8s ease-in forwards 0.2s; }
-    @keyframes vanishStage { to { opacity: 0; transform: scale(0.8) translateY(50px); } }
+    /* 2. Box Vanish */
+    .fade-out-box { animation: fadeOut 1s forwards 0.5s; }
+    @keyframes fadeOut { to { opacity: 0; pointer-events: none; } }
 
-    /* Faster feed appearance */
-    .show-feed { animation: fadeIn 0.5s ease forwards 0.5s; pointer-events: all; }
-    @keyframes fadeIn { to { opacity: 1; } }
+    /* 3. Text Appear/Disappear */
+    .seq-text { animation: appearDisappear 4s ease-in-out forwards; }
+    @keyframes appearDisappear {
+        0% { opacity: 0; transform: translate(-50%, -40%); }
+        30% { opacity: 1; transform: translate(-50%, -50%); } /* Stay visible */
+        70% { opacity: 1; transform: translate(-50%, -50%); } /* Stay visible */
+        100% { opacity: 0; transform: translate(-50%, -60%); } /* Fade out up */
+    }
 
-    .slide-in-post { animation: slideUpFade 0.6s ease-out forwards; }
-    @keyframes slideUpFade { from { opacity:0; transform:translateY(50px); } to { opacity:1; transform:translateY(0); } }
+    /* 4. Rows Slide In */
+    .slide-left { animation: slideInLeft 1.2s ease-out forwards; }
+    @keyframes slideInLeft { from{opacity:0; transform:translateX(-50px);} to{opacity:1; transform:translateX(0);} }
 
-    .confetti { position: fixed; top: -20px; width: 10px; height: 10px; background: gold; z-index: 100; pointer-events: none; animation: fall 3s linear forwards; }
+    .slide-right { animation: slideInRight 1.2s ease-out forwards; }
+    @keyframes slideInRight { from{opacity:0; transform:translateX(50px);} to{opacity:1; transform:translateX(0);} }
+    
+    .slide-up { animation: slideInUp 1.2s ease-out forwards; }
+    @keyframes slideInUp { from{opacity:0; transform:translateY(50px);} to{opacity:1; transform:translateY(0);} }
+
+    /* Confetti */
+    .confetti { position: fixed; top: -10px; width: 10px; height: 10px; background: gold; z-index: 100; animation: fall 3s linear forwards; }
     @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
 
-
-    /* --- NEXT BUTTON --- */
-    .next-btn-container {
-        position: fixed; bottom: 0; left:0; width: 100%; padding: 20px;
-        background: linear-gradient(to top, #ffffff 80%, transparent);
-        display: flex; justify-content: center; z-index: 150;
-        opacity: 0; pointer-events: none; transition: 0.5s;
-    }
+    /* Next Button */
     .next-btn {
-        padding: 12px 45px; background: linear-gradient(45deg, #d63384, #ffd700);
+        margin-top: 50px; padding: 12px 50px;
+        background: linear-gradient(45deg, #d63384, #ffd700);
         border: none; color: white; border-radius: 30px; font-family: 'Poppins', sans-serif;
-        cursor: pointer; font-size: 18px; box-shadow: 0 5px 20px rgba(214, 51, 132, 0.4);
-        font-weight: 600;
+        font-size: 18px; cursor: pointer; opacity: 0; transition: 0.3s;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
     }
-    .show-btn-cont { opacity: 1; pointer-events: all; }
+    .next-btn:hover { transform: scale(1.05); }
+    .show-btn { animation: slideInUp 1s ease forwards; opacity: 1 !important; pointer-events: all; }
 
 </style>
 </head>
@@ -168,115 +191,117 @@
 
     <div id="frame-border"></div>
 
-    <div class="gift-stage" onclick="openGift()">
-        <div class="box-lid" id="lid"><div class="box-bow">🎀</div></div>
-        <div class="box-body"></div>
-    </div>
-    <div class="instruction" id="instruction">Tap to unlock memories ✨</div>
 
-
-    <div class="feed-container" id="feed-container">
-        <div class="feed-title">Riya's Birthday Feed</div>
-
-        <div class="insta-post" id="post1">
-            <div class="insta-header">
-                <div class="insta-profile-pic">R</div>
-                <div class="insta-username">Us_Memories</div>
-            </div>
-            <div class="insta-image-container">
-                <img src="us_photo1.jpg" alt="Memory 1">
-            </div>
-            <div class="insta-actions"><span class="liked-heart">❤️</span> 💬</div>
-            <div class="insta-caption">
-                <span class="caption-username">besties:</span> 
-                <span class="caption-text">Do you remember this day? We laughed so much our stomachs hurt! Best time ever. 😂</span>
-            </div>
+    <div class="gift-stage-container" id="gift-container">
+        <div class="gift-stage" onclick="startSequence()">
+            <div class="box-lid" id="lid"><div class="box-bow">🎀</div></div>
+            <div class="box-body"></div>
+            <div class="instruction">Tap to unlock memories...</div>
         </div>
-
-        <div class="insta-post" id="post2">
-            <div class="insta-header">
-                <div class="insta-profile-pic">R</div>
-                <div class="insta-username">Us_Memories</div>
-            </div>
-            <div class="insta-image-container">
-                <img src="us_photo2.jpg" alt="Memory 2">
-            </div>
-            <div class="insta-actions"><span class="liked-heart">❤️</span> 💬</div>
-            <div class="insta-caption">
-                <span class="caption-username">besties:</span>
-                <span class="caption-text">Just a random click, but it captures how comfortable silence is with you. 📸</span>
-            </div>
-        </div>
-
-        <div class="insta-post" id="post3">
-            <div class="insta-header">
-                <div class="insta-profile-pic">R</div>
-                <div class="insta-username">Us_Memories</div>
-            </div>
-            <div class="insta-image-container">
-                <img src="us_photo3.jpg" alt="Memory 3">
-            </div>
-            <div class="insta-actions"><span class="liked-heart">❤️</span> 💬</div>
-            <div class="insta-caption">
-                <span class="caption-username">besties:</span>
-                <span class="caption-text">Here's to creating a million more memories like these. Love you! ❤️</span>
-            </div>
-        </div>
-
-        <div class="insta-post" id="post4">
-            <div class="insta-header">
-                <div class="insta-profile-pic" style="background:#d4af37">✨</div>
-                <div class="insta-username">Birthday_Wishes</div>
-            </div>
-            <div class="final-message-visual">💐🌹🌺</div>
-            <div class="insta-actions"><span class="liked-heart">❤️</span> 💬</div>
-            <div class="insta-caption">
-                <span class="caption-username">Only_Yours:</span>
-                <span class="caption-text special-caption">Virtual flowers for the most beautiful flower. May all your birthday wishes come true, Princess. 🌹✨</span>
-            </div>
-        </div>
-
     </div>
 
-    <div class="next-btn-container" id="btn-cont">
-        <button class="next-btn" onclick="window.location.href='page5.html'">One Last Thing... ➔</button>
+
+    <div class="intro-message" id="intro-msg">
+        Opening the treasure box of memories... <br>
+        <span style="font-size: 24px; font-family:'Poppins'; color:#888;">Hold on...</span>
+    </div>
+
+
+    <div class="memories-container" id="gallery">
+        
+        <div class="memory-row row-left" id="row1">
+            <div class="photo-wrapper">
+                <img src="us_photo1.jpg" alt="Us 1">
+            </div>
+            <div class="note-wrapper">
+                <div class="note-text">
+                    "This day was pure magic. Your laughter is my favorite sound in the world."
+                </div>
+            </div>
+        </div>
+
+        <div class="memory-row row-right" id="row2">
+            <div class="note-wrapper">
+                <div class="note-text">
+                    "Comfort is sitting in silence with you and feeling like I'm home."
+                </div>
+            </div>
+            <div class="photo-wrapper">
+                <img src="us_photo2.jpg" alt="Us 2">
+            </div>
+        </div>
+
+        <div class="memory-row row-left" id="row3">
+            <div class="photo-wrapper">
+                <img src="us_photo3.jpg" alt="Us 3">
+            </div>
+            <div class="note-wrapper">
+                <div class="note-text">
+                    "Here's to a lifetime of crazy selfies and beautiful moments. Love you!"
+                </div>
+            </div>
+        </div>
+
+        <div class="memory-row final-row" id="row4">
+            <div class="final-card">
+                <div class="final-text">
+                    Virtual flowers for the most beautiful flower. 🌹<br>
+                    May all your wishes come true, Princess.
+                </div>
+            </div>
+            <button class="next-btn" onclick="window.location.href='page5.html'">Make a Wish ➔</button>
+        </div>
+
     </div>
 
 
     <script>
-        let opened = false;
+        let started = false;
 
-        function openGift() {
-            if (opened) return;
-            opened = true;
+        function startSequence() {
+            if(started) return;
+            started = true;
 
             const lid = document.getElementById('lid');
-            const stage = document.querySelector('.gift-stage');
-            const instr = document.getElementById('instruction');
-            const feedCont = document.getElementById('feed-container');
-            const btnCont = document.getElementById('btn-cont');
+            const giftCont = document.getElementById('gift-container');
+            const introMsg = document.getElementById('intro-msg');
+            const gallery = document.getElementById('gallery');
             
-            const p1 = document.getElementById('post1');
-            const p2 = document.getElementById('post2');
-            const p3 = document.getElementById('post3');
-            const p4 = document.getElementById('post4');
+            const r1 = document.getElementById('row1');
+            const r2 = document.getElementById('row2');
+            const r3 = document.getElementById('row3');
+            const r4 = document.getElementById('row4');
 
-            instr.style.opacity = '0';
-            lid.classList.add('lid-open-realistic');
+            // 1. Open Box Animation
+            lid.classList.add('lid-open');
             launchConfetti();
-            stage.classList.add('vanish-box');
 
-            // Show Feed Faster
-            feedCont.classList.add('show-feed');
+            // 2. Fade Out Box Container (1s delay)
+            setTimeout(() => {
+                giftCont.classList.add('fade-out-box');
+            }, 500);
 
-            // Sequence Posts (Faster timing)
-            setTimeout(() => { p1.classList.add('slide-in-post'); }, 800);
-            setTimeout(() => { p2.classList.add('slide-in-post'); }, 1400);
-            setTimeout(() => { p3.classList.add('slide-in-post'); }, 2000);
-            setTimeout(() => { p4.classList.add('slide-in-post'); }, 2600);
+            // 3. Show Intro Message (Starts at 1.5s, lasts 4s)
+            setTimeout(() => {
+                introMsg.classList.add('seq-text');
+            }, 1200);
 
-            // Show Button
-            setTimeout(() => { btnCont.classList.add('show-btn-cont'); }, 3200);
+            // 4. Show Gallery Container (After message fades, around 5s)
+            setTimeout(() => {
+                giftCont.style.display = 'none'; // Remove box completely
+                gallery.style.display = 'flex';  // Reveal gallery layout
+            }, 5000);
+
+            // 5. Animate Rows Sequentially (Slow Reveal)
+            setTimeout(() => { r1.classList.add('slide-left'); }, 5200);
+            setTimeout(() => { r2.classList.add('slide-right'); }, 7000);
+            setTimeout(() => { r3.classList.add('slide-left'); }, 8800);
+            
+            // 6. Final Message & Button
+            setTimeout(() => { 
+                r4.classList.add('slide-up'); 
+                document.querySelector('.next-btn').classList.add('show-btn');
+            }, 10500);
         }
 
         function launchConfetti() {
@@ -295,3 +320,4 @@
 
 </body>
 </html>
+
