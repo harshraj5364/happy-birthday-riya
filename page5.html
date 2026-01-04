@@ -7,186 +7,161 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-    /* --- ATMOSPHERE & LIGHTING --- */
+    /* --- ATMOSPHERE --- */
     body {
         min-height: 100vh; margin: 0; font-family: 'Poppins', sans-serif;
-        background-color: #1a0b12; /* Dark base */
+        background-color: #1a0b12; /* Dark warm base */
         display: flex; flex-direction: column; align-items: center; justify-content: center;
         overflow: hidden;
         transition: background-color 3s ease;
     }
 
-    /* The Warm Glow Vignette (Simulates Candle Light) */
-    .lighting-overlay {
+    /* Warm Candle Light Overlay */
+    .light-overlay {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: radial-gradient(circle at 50% 70%, rgba(255, 160, 50, 0.2) 0%, rgba(26, 11, 18, 0.9) 60%, #1a0b12 100%);
-        pointer-events: none; z-index: 1;
-        transition: opacity 2s ease;
-        animation: lightPulse 3s infinite alternate; /* Light breathes */
+        background: radial-gradient(circle at 50% 60%, rgba(255, 180, 60, 0.15) 0%, rgba(0,0,0,0.8) 60%, #000 100%);
+        pointer-events: none; z-index: 10;
+        transition: opacity 1.5s ease;
+        animation: ambientFlicker 4s infinite alternate;
     }
-    
-    @keyframes lightPulse {
-        0% { opacity: 0.8; transform: scale(1); }
-        100% { opacity: 1; transform: scale(1.02); }
+    @keyframes ambientFlicker {
+        0% { opacity: 1; transform: scale(1); }
+        100% { opacity: 0.9; transform: scale(1.01); }
     }
 
-    /* Texture */
-    .texture {
+    /* Starry Background */
+    .starry-night {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.05"/></svg>');
-        pointer-events: none; z-index: 2; opacity: 0.4;
+        background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+        z-index: 1; opacity: 0; transition: opacity 3s ease 1s;
     }
+    .star {
+        position: absolute; background: white; border-radius: 50%;
+        animation: twinkle 2s infinite ease-in-out;
+    }
+    @keyframes twinkle { 0%, 100%{opacity:0.3;} 50%{opacity:1;} }
 
-    /* Border */
     #frame-border {
         position: fixed; top: 20px; left: 20px; right: 20px; bottom: 20px;
         border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 20px; 
-        pointer-events: none; z-index: 99; transition: border-color 2s, opacity 2s;
+        pointer-events: none; z-index: 99; transition: opacity 2s;
     }
 
 
-    /* --- THE REALISTIC CANDLE --- */
-    .candle-container {
-        position: relative;
-        width: 120px; height: 350px;
-        display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
-        cursor: pointer; z-index: 10;
-        margin-top: 60px;
+    /* --- CANDLE STAGE --- */
+    .candle-stage {
+        position: relative; width: 100%; height: 400px;
+        display: flex; justify-content: center; align-items: flex-end;
+        z-index: 20; transition: opacity 1s;
     }
 
-    /* Wax Body */
-    .candle {
-        width: 70px; height: 180px;
-        background: linear-gradient(to right, #e8c39e, #ffefd5 40%, #ffefd5 60%, #deb887);
-        border-radius: 8px;
-        box-shadow: inset 0 -20px 30px rgba(0,0,0,0.3), 0 0 20px rgba(255, 160, 50, 0.1);
+    .candle-body {
+        width: 80px; height: 200px;
+        background: linear-gradient(to right, #e8c39e 0%, #ffefd5 45%, #fff5e6 55%, #deb887 100%);
+        border-radius: 6px;
+        box-shadow: inset 0 20px 30px rgba(255, 140, 0, 0.2), inset 0 -20px 30px rgba(0,0,0,0.1), 0 0 20px rgba(255, 100, 0, 0.1);
         position: relative;
     }
-    .candle::before { /* Melted wax pool on top */
-        content: ""; position: absolute; top: -12px; left: 0; width: 100%; height: 25px;
-        background: radial-gradient(#fff9f0, #ffe4c4);
+    .candle-body::before { /* Melted Pool */
+        content: ""; position: absolute; top: -15px; left: 0; width: 100%; height: 30px;
+        background: radial-gradient(circle, #fffdf5 20%, #ffdfb0 100%);
         border-radius: 50%;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 10px rgba(255, 140, 0, 0.4);
     }
 
-    /* Wick */
     .wick {
-        width: 4px; height: 18px; background: linear-gradient(#333, #555);
-        margin-bottom: -8px; z-index: 12; border-radius: 2px;
+        position: absolute; top: -25px; left: 50%; transform: translateX(-50%);
+        width: 4px; height: 15px; background: #222; border-radius: 2px; z-index: 22;
     }
-    .wick::after { /* Red glowing tip */
-        content:""; position: absolute; top: 0; left: 0; width: 100%; height: 6px;
-        background: #ff4500; border-radius: 50%; opacity: 0.8;
-    }
+    .wick::after { content:""; position: absolute; top:0; left:0; width:100%; height:5px; background: #ff5500; border-radius: 50%; opacity: 0.8; }
 
-    /* Realistic Flame Structure */
     .flame-container {
-        position: relative; width: 30px; height: 60px;
-        transform-origin: bottom center;
-        animation: flameFlicker 3s infinite;
-        transition: opacity 0.3s, transform 0.3s;
+        position: absolute; top: -90px; left: 50%; transform: translateX(-50%);
+        width: 40px; height: 70px; transform-origin: bottom center;
+        animation: physicsFlicker 3s infinite; transition: all 0.5s; z-index: 25; cursor: pointer;
     }
-    
-    .flame-main {
-        position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-        width: 30px; height: 60px;
-        background: radial-gradient(ellipse at bottom, rgba(255,255,255,0.9) 0%, rgba(255,255,0,0.6) 30%, rgba(255,140,0,0.4) 70%, transparent 100%);
-        border-radius: 50% 50% 20% 20%;
-        filter: blur(2px);
+    .flame-core {
+        width: 100%; height: 100%;
+        background: radial-gradient(ellipse at bottom, rgba(255,255,255,0.9) 0%, rgba(255,255,0,0.6) 30%, rgba(255,100,0,0.3) 70%, transparent 100%);
+        border-radius: 50% 50% 20% 20%; filter: blur(2px);
     }
-    
-    .flame-glow {
+    .flame-halo {
         position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
-        width: 80px; height: 80px;
-        background: radial-gradient(circle, rgba(255,160,50,0.4) 0%, transparent 70%);
-        border-radius: 50%;
-        animation: glowPulse 0.1s infinite alternate;
+        width: 120px; height: 120px; background: radial-gradient(circle, rgba(255,160,50,0.2) 0%, transparent 60%);
+        border-radius: 50%; animation: glowPulse 0.2s infinite alternate; pointer-events: none;
     }
-
-    /* Natural Flicker Animation */
-    @keyframes flameFlicker {
-        0%, 100% { transform: scale(1) rotate(-1deg); }
-        25% { transform: scale(1.05) rotate(1deg); }
-        50% { transform: scale(0.95) rotate(-2deg); }
-        75% { transform: scale(1.02) rotate(2deg); }
-    }
-    @keyframes glowPulse {
-        from { opacity: 0.8; transform: translateX(-50%) scale(1); }
-        to { opacity: 1; transform: translateX(-50%) scale(1.1); }
-    }
-
-
-    /* --- REALISTIC SMOKE PARTICLES (Generated by JS) --- */
-    .smoke-particle {
-        position: absolute;
-        bottom: 200px; /* Start near wick */
-        left: 50%;
-        background: radial-gradient(circle, rgba(200,200,200,0.4) 0%, rgba(150,150,150,0) 70%);
-        border-radius: 50%;
-        pointer-events: none;
-        filter: blur(8px);
-        opacity: 0;
-        z-index: 20;
+    @keyframes physicsFlicker {
+        0% { transform: translateX(-50%) rotate(-1deg) scale(1); }
+        50% { transform: translateX(-50%) rotate(1deg) scale(0.95); }
+        100% { transform: translateX(-50%) rotate(-1deg) scale(1); }
     }
     
-    /* This animation is applied dynamically in JS for random movement */
-    @keyframes riseRealistic {
-        0% { opacity: 0; transform: translate(-50%, 0) scale(0.5); }
-        10% { opacity: 0.6; transform: translate(var(--moveX), -30px) scale(1.5); }
-        100% { opacity: 0; transform: translate(var(--finalX), -250px) scale(4); }
+    /* Smoke */
+    .smoke {
+        position: absolute; bottom: 220px; left: 50%; width: 10px; height: 10px;
+        background: radial-gradient(circle, rgba(200,200,200,0.5) 0%, transparent 70%);
+        border-radius: 50%; pointer-events: none; filter: blur(5px);
     }
 
 
     /* --- TEXT CONTENT --- */
-    .text-container {
-        position: absolute; top: 18%; width: 100%; text-align: center; z-index: 50;
+    .text-area {
+        position: absolute; top: 10%; width: 90%; text-align: center; z-index: 50;
     }
 
-    .instruction {
-        font-family: 'Dancing Script', cursive; font-size: 30px; color: #ffebcd;
-        text-shadow: 0 0 10px rgba(255, 160, 50, 0.5);
-        transition: opacity 1s;
+    .instr-text {
+        font-family: 'Dancing Script', cursive; font-size: 32px; color: #ffebcd;
+        text-shadow: 0 0 20px rgba(255, 140, 0, 0.8);
+        transition: opacity 1s; animation: floatText 3s infinite ease-in-out;
     }
-    .instruction small {
-        display: block; font-family: 'Poppins', sans-serif; font-size: 14px; 
-        color: rgba(255,255,255,0.5); margin-top: 10px; letter-spacing: 1px;
-    }
+    @keyframes floatText { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
 
-    .final-wish-container {
-        position: absolute; width: 100%; top: 0;
-        display: flex; flex-direction: column; align-items: center;
-        opacity: 0; pointer-events: none;
-        transition: opacity 2s 1s;
+    .final-message {
+        width: 100%; display: flex; flex-direction: column; align-items: center;
+        opacity: 0; pointer-events: none; transition: opacity 2s 1.5s;
     }
     
-    .final-wish {
-        font-family: 'Cinzel', serif; font-size: 34px; 
-        background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+    .wish-title {
+        font-family: 'Cinzel', serif; font-size: 36px; 
+        background: linear-gradient(to bottom, #fff, #ffd700);
         -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        margin-bottom: 20px;
-        filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
+        filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5)); margin-bottom: 20px;
+    }
+    
+    .wish-body {
+        font-family: 'Poppins', sans-serif; font-size: 16px; color: #ccc;
+        line-height: 1.6; text-shadow: 0 2px 5px black; margin-bottom: 30px;
     }
 
-    .sub-text {
-        font-family: 'Dancing Script', cursive; font-size: 26px; color: #e0e0e0;
-        line-height: 1.6;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    /* New Personal Message Styles */
+    .personal-note {
+        font-family: 'Dancing Script', cursive; font-size: 24px; color: #ffaa9f;
+        margin-bottom: 30px; transform: translateY(20px); opacity: 0;
+        animation: slideUpFade 1.5s ease forwards 2.5s; /* Delays appearance */
     }
+    
+    .thank-you {
+        font-family: 'Cinzel', serif; font-size: 14px; color: #d4af37;
+        letter-spacing: 2px; border-top: 1px solid rgba(212, 175, 55, 0.3);
+        padding-top: 15px; margin-top: 10px;
+        transform: translateY(20px); opacity: 0;
+        animation: slideUpFade 1.5s ease forwards 4s; /* Delays appearance last */
+    }
+
+    @keyframes slideUpFade { to { transform: translateY(0); opacity: 1; } }
 
 
     /* --- UTILITIES --- */
-    .dark-mode-active { background-color: #050203 !important; } /* Total black */
     .lights-out { opacity: 0 !important; }
+    .show-stars { opacity: 1 !important; }
     
     .restart-btn {
-        position: fixed; bottom: 40px;
-        padding: 12px 35px; border: 1px solid rgba(255,255,255,0.2); 
-        color: rgba(255,255,255,0.5);
-        background: transparent; border-radius: 30px; cursor: pointer;
-        opacity: 0; transition: 0.5s; font-family: 'Poppins', sans-serif; letter-spacing: 1px;
-        z-index: 100;
+        position: fixed; bottom: 30px; padding: 10px 30px;
+        background: transparent; border: 1px solid rgba(255,255,255,0.3); color: #666;
+        border-radius: 30px; font-family: 'Poppins', sans-serif; font-size: 12px;
+        opacity: 0; transition: 0.5s; cursor: pointer; z-index: 100;
     }
-    .restart-btn:hover { border-color: #d4af37; color: #d4af37; background: rgba(255,255,255,0.05); }
+    .restart-btn:hover { border-color: gold; color: gold; }
 
 </style>
 </head>
@@ -196,38 +171,61 @@
         <source src="music.mp3" type="audio/mpeg">
     </audio>
 
-    <div class="texture"></div>
-    <div class="lighting-overlay" id="lighting"></div>
+    <div class="starry-night" id="stars-bg"></div>
+    <div class="light-overlay" id="room-light"></div>
     <div id="frame-border"></div>
 
-    <div class="text-container">
-        <div class="instruction" id="instruction">
-            Make a wish...
-            <small>Tap the flame to blow it out</small>
+    <div class="text-area">
+        <div class="instr-text" id="instruction">
+            Make a wish...<br>
+            <span style="font-size:16px; font-family:'Poppins'; opacity:0.7;">(Tap the flame)</span>
         </div>
 
-        <div class="final-wish-container" id="final-wish">
-            <div class="final-wish">✨ Wish Granted ✨</div>
-            <div class="sub-text">
+        <div class="final-message" id="final-msg">
+            <div class="wish-title">✨ Wish Granted ✨</div>
+            
+            <div class="wish-body">
                 Happy Birthday, Riya.<br>
-                May your life be full of magic.<br>
-                Always. ❤️
+                May your life always shine as bright<br>
+                as these stars in the sky.
+            </div>
+
+            <div class="personal-note">
+                "Hamesha aise hi muskurate rehna.<br>
+                I am always there for you."
+            </div>
+
+            <div class="thank-you">
+                THANK YOU FOR BEING IN MY LIFE ❤️
             </div>
         </div>
     </div>
 
-    <div class="candle-container" onclick="blowCandle()">
-        <div class="flame-container" id="flame">
-            <div class="flame-glow"></div>
-            <div class="flame-main"></div>
+    <div class="candle-stage">
+        <div class="candle-body">
+            <div class="wick"></div>
+            <div class="flame-container" id="flame" onclick="blowCandle()">
+                <div class="flame-halo"></div>
+                <div class="flame-core"></div>
+            </div>
         </div>
-        <div class="wick"></div>
-        <div class="candle"></div>
     </div>
 
-    <button class="restart-btn" id="restart-btn" onclick="window.location.href='index.html'">Watch Again</button>
+    <button class="restart-btn" id="restart-btn" onclick="window.location.href='index.html'">Watch Again ↻</button>
 
     <script>
+        const starsBg = document.getElementById('stars-bg');
+        for(let i=0; i<100; i++) {
+            let star = document.createElement('div');
+            star.className = 'star';
+            star.style.width = Math.random() * 3 + 'px';
+            star.style.height = star.style.width;
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 2 + 's';
+            starsBg.appendChild(star);
+        }
+
         let blown = false;
 
         function blowCandle() {
@@ -235,67 +233,53 @@
             blown = true;
 
             const flame = document.getElementById('flame');
-            const lighting = document.getElementById('lighting');
-            const body = document.body;
+            const roomLight = document.getElementById('room-light');
             const instr = document.getElementById('instruction');
-            const finalDiv = document.getElementById('final-wish');
+            const finalMsg = document.getElementById('final-msg');
             const btn = document.getElementById('restart-btn');
-            const border = document.getElementById('frame-border');
+            const stars = document.getElementById('stars-bg');
+            const candleStage = document.querySelector('.candle-stage');
 
-            // 1. Extinguish Flame
+            // Animation Sequence
             flame.style.opacity = '0';
             flame.style.transform = 'scale(0.5)';
+            roomLight.classList.add('lights-out');
+            makeSmoke();
 
-            // 2. Turn off the Lights (Vignette disappears)
-            lighting.classList.add('lights-out');
-            body.classList.add('dark-mode-active');
-            border.style.opacity = '0.2';
-            border.style.borderColor = '#333';
+            // Fade out candle body slowly to focus on text
+            setTimeout(() => { candleStage.style.opacity = '0.3'; }, 2000);
 
-            // 3. Generate REALISTIC SMOKE
-            createRealisticSmoke();
-
-            // 4. Handle Text
             instr.style.opacity = '0';
             setTimeout(() => {
-                finalDiv.style.opacity = '1';
-                finalDiv.style.pointerEvents = 'all';
+                stars.classList.add('show-stars');
+                finalMsg.style.opacity = '1';
                 btn.style.opacity = '1';
-            }, 1500);
+                btn.style.pointerEvents = 'all';
+            }, 1000);
         }
 
-        function createRealisticSmoke() {
-            const container = document.querySelector('.candle-container');
-            const particleCount = 30; // More particles for realism
-
-            for (let i = 0; i < particleCount; i++) {
+        function makeSmoke() {
+            const container = document.querySelector('.candle-stage');
+            for(let i=0; i<40; i++) {
                 setTimeout(() => {
-                    const particle = document.createElement('div');
-                    particle.classList.add('smoke-particle');
-                    
-                    // Randomize movement variables
-                    const moveX = (Math.random() - 0.5) * 50 + 'px'; // Wiggle left/right
-                    const finalX = (Math.random() - 0.5) * 150 + 'px'; // Drift far away
-                    const size = (Math.random() * 20 + 10) + 'px'; // Random size
-                    const duration = (Math.random() * 2 + 2) + 's'; // Random speed
-
-                    particle.style.width = size;
-                    particle.style.height = size;
-                    particle.style.setProperty('--moveX', moveX);
-                    particle.style.setProperty('--finalX', finalX);
-                    
-                    // Apply animation
-                    particle.style.animation = `riseRealistic ${duration} forwards ease-out`;
-
-                    container.appendChild(particle);
-
-                    // Clean up
-                    setTimeout(() => particle.remove(), 4000);
-
-                }, i * 50); // Stagger the particles slightly so they don't all appear at once
+                    let s = document.createElement('div');
+                    s.className = 'smoke';
+                    let left = (Math.random() - 0.5) * 60 + 'px';
+                    let dur = (Math.random() * 2 + 3) + 's';
+                    s.style.left = `calc(50% + ${left})`;
+                    s.style.bottom = '200px'; 
+                    s.style.animation = `rise ${dur} forwards`;
+                    s.animate([
+                        { transform: 'translate(0,0) scale(1)', opacity: 0.6 },
+                        { transform: `translate(${left}, -250px) scale(4)`, opacity: 0 }
+                    ], { duration: 4000, easing: 'ease-out' });
+                    container.appendChild(s);
+                    setTimeout(() => s.remove(), 4000);
+                }, i * 50);
             }
         }
     </script>
 
 </body>
 </html>
+
