@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Make A Wish</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&family=Great+Vibes&display=swap" rel="stylesheet">
 
 <style>
     /* --- ATMOSPHERE --- */
@@ -20,7 +20,8 @@
     .light-overlay {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background: radial-gradient(circle at 50% 60%, rgba(255, 180, 60, 0.15) 0%, rgba(0,0,0,0.8) 60%, #000 100%);
-        pointer-events: none; z-index: 10;
+        pointer-events: none; /* IMPORTANT: Lets clicks pass through */
+        z-index: 10;
         transition: opacity 1.5s ease;
         animation: ambientFlicker 4s infinite alternate;
     }
@@ -34,6 +35,7 @@
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
         z-index: 1; opacity: 0; transition: opacity 3s ease 1s;
+        pointer-events: none;
     }
     .star {
         position: absolute; background: white; border-radius: 50%;
@@ -53,6 +55,7 @@
         position: relative; width: 100%; height: 400px;
         display: flex; justify-content: center; align-items: flex-end;
         z-index: 20; transition: opacity 1s;
+        pointer-events: none; /* Let clicks pass through area to the flame */
     }
 
     .candle-body {
@@ -61,6 +64,7 @@
         border-radius: 6px;
         box-shadow: inset 0 20px 30px rgba(255, 140, 0, 0.2), inset 0 -20px 30px rgba(0,0,0,0.1), 0 0 20px rgba(255, 100, 0, 0.1);
         position: relative;
+        pointer-events: auto;
     }
     .candle-body::before { /* Melted Pool */
         content: ""; position: absolute; top: -15px; left: 0; width: 100%; height: 30px;
@@ -75,13 +79,20 @@
     }
     .wick::after { content:""; position: absolute; top:0; left:0; width:100%; height:5px; background: #ff5500; border-radius: 50%; opacity: 0.8; }
 
+    /* FLAME - CLICKABLE AREA */
     .flame-container {
         position: absolute; top: -90px; left: 50%; transform: translateX(-50%);
-        width: 40px; height: 70px; transform-origin: bottom center;
-        animation: physicsFlicker 3s infinite; transition: all 0.5s; z-index: 25; cursor: pointer;
+        width: 60px; height: 100px; /* Made bigger for easier clicking */
+        transform-origin: bottom center;
+        animation: physicsFlicker 3s infinite; transition: all 0.5s; 
+        z-index: 100; /* Highest Z-Index to ensure clickability */
+        cursor: pointer;
+        pointer-events: auto; /* Force clickable */
     }
+    
     .flame-core {
-        width: 100%; height: 100%;
+        position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+        width: 30px; height: 60px;
         background: radial-gradient(ellipse at bottom, rgba(255,255,255,0.9) 0%, rgba(255,255,0,0.6) 30%, rgba(255,100,0,0.3) 70%, transparent 100%);
         border-radius: 50% 50% 20% 20%; filter: blur(2px);
     }
@@ -96,7 +107,6 @@
         100% { transform: translateX(-50%) rotate(-1deg) scale(1); }
     }
     
-    /* Smoke */
     .smoke {
         position: absolute; bottom: 220px; left: 50%; width: 10px; height: 10px;
         background: radial-gradient(circle, rgba(200,200,200,0.5) 0%, transparent 70%);
@@ -107,6 +117,7 @@
     /* --- TEXT CONTENT --- */
     .text-area {
         position: absolute; top: 10%; width: 90%; text-align: center; z-index: 50;
+        pointer-events: none; /* CRITICAL: Allows clicks to pass through text to the candle */
     }
 
     .instr-text {
@@ -130,22 +141,26 @@
     
     .wish-body {
         font-family: 'Poppins', sans-serif; font-size: 16px; color: #ccc;
-        line-height: 1.6; text-shadow: 0 2px 5px black; margin-bottom: 30px;
+        line-height: 1.6; text-shadow: 0 2px 5px black; margin-bottom: 20px;
     }
 
-    /* New Personal Message Styles */
-    .personal-note {
-        font-family: 'Dancing Script', cursive; font-size: 24px; color: #ffaa9f;
-        margin-bottom: 30px; transform: translateY(20px); opacity: 0;
-        animation: slideUpFade 1.5s ease forwards 2.5s; /* Delays appearance */
+    .emotional-quote {
+        font-family: 'Great Vibes', cursive; font-size: 30px; color: #ffaa9f;
+        margin-bottom: 25px; transform: translateY(20px); opacity: 0;
+        animation: slideUpFade 1.5s ease forwards 2.5s;
+        text-shadow: 0 0 10px rgba(255, 111, 97, 0.3);
+    }
+
+    .promise-text {
+        font-family: 'Dancing Script', cursive; font-size: 20px; color: #fff;
+        opacity: 0; animation: slideUpFade 1.5s ease forwards 3.5s;
     }
     
     .thank-you {
-        font-family: 'Cinzel', serif; font-size: 14px; color: #d4af37;
-        letter-spacing: 2px; border-top: 1px solid rgba(212, 175, 55, 0.3);
-        padding-top: 15px; margin-top: 10px;
-        transform: translateY(20px); opacity: 0;
-        animation: slideUpFade 1.5s ease forwards 4s; /* Delays appearance last */
+        font-family: 'Cinzel', serif; font-size: 12px; color: #d4af37;
+        letter-spacing: 3px; border-top: 1px solid rgba(212, 175, 55, 0.3);
+        padding-top: 15px; margin-top: 25px;
+        opacity: 0; animation: slideUpFade 1.5s ease forwards 5s;
     }
 
     @keyframes slideUpFade { to { transform: translateY(0); opacity: 1; } }
@@ -159,7 +174,7 @@
         position: fixed; bottom: 30px; padding: 10px 30px;
         background: transparent; border: 1px solid rgba(255,255,255,0.3); color: #666;
         border-radius: 30px; font-family: 'Poppins', sans-serif; font-size: 12px;
-        opacity: 0; transition: 0.5s; cursor: pointer; z-index: 100;
+        opacity: 0; transition: 0.5s; cursor: pointer; z-index: 100; pointer-events: auto;
     }
     .restart-btn:hover { border-color: gold; color: gold; }
 
@@ -185,18 +200,24 @@
             <div class="wish-title">✨ Wish Granted ✨</div>
             
             <div class="wish-body">
-                Happy Birthday, Riya.<br>
-                May your life always shine as bright<br>
-                as these stars in the sky.
+                Happy Birthday, Princess. 🎂<br>
+                May this year bring you as much happiness<br>
+                as you bring to everyone around you.
             </div>
 
-            <div class="personal-note">
-                "Hamesha aise hi muskurate rehna.<br>
-                I am always there for you."
+            <div class="emotional-quote">
+                "Tum sirf ek dost nahi,<br>
+                Sukoon ho mera."
+            </div>
+
+            <div class="promise-text">
+                Bas hamesha aise hi muskurate rehna,<br>
+                kyunki tumhari smile meri favorite hai.<br>
+                I'm always with you. ❤️
             </div>
 
             <div class="thank-you">
-                THANK YOU FOR BEING IN MY LIFE ❤️
+                THANK YOU FOR EXISTING
             </div>
         </div>
     </div>
@@ -214,6 +235,7 @@
     <button class="restart-btn" id="restart-btn" onclick="window.location.href='index.html'">Watch Again ↻</button>
 
     <script>
+        // Generate stars immediately
         const starsBg = document.getElementById('stars-bg');
         for(let i=0; i<100; i++) {
             let star = document.createElement('div');
@@ -231,7 +253,8 @@
         function blowCandle() {
             if(blown) return;
             blown = true;
-
+            
+            // Get Elements
             const flame = document.getElementById('flame');
             const roomLight = document.getElementById('room-light');
             const instr = document.getElementById('instruction');
@@ -240,21 +263,27 @@
             const stars = document.getElementById('stars-bg');
             const candleStage = document.querySelector('.candle-stage');
 
-            // Animation Sequence
+            // 1. Vanish Flame
             flame.style.opacity = '0';
             flame.style.transform = 'scale(0.5)';
+            
+            // 2. Darken Room
             roomLight.classList.add('lights-out');
+            
+            // 3. Smoke Effect
             makeSmoke();
 
-            // Fade out candle body slowly to focus on text
-            setTimeout(() => { candleStage.style.opacity = '0.3'; }, 2000);
+            // 4. Fade out candle slightly
+            setTimeout(() => { candleStage.style.opacity = '0.2'; }, 2000);
 
+            // 5. Hide Instruction & Show Message
             instr.style.opacity = '0';
+            
             setTimeout(() => {
                 stars.classList.add('show-stars');
                 finalMsg.style.opacity = '1';
                 btn.style.opacity = '1';
-                btn.style.pointerEvents = 'all';
+                btn.style.pointerEvents = 'all'; // Enable button click
             }, 1000);
         }
 
@@ -268,18 +297,30 @@
                     let dur = (Math.random() * 2 + 3) + 's';
                     s.style.left = `calc(50% + ${left})`;
                     s.style.bottom = '200px'; 
-                    s.style.animation = `rise ${dur} forwards`;
-                    s.animate([
-                        { transform: 'translate(0,0) scale(1)', opacity: 0.6 },
-                        { transform: `translate(${left}, -250px) scale(4)`, opacity: 0 }
-                    ], { duration: 4000, easing: 'ease-out' });
+                    
+                    // Standard CSS animation for better compatibility
+                    s.style.animation = `rise ${dur} forwards`; 
+                    
+                    // Adding manual style just in case
+                    s.style.transition = `transform ${dur} linear, opacity ${dur} ease-in`;
+                    setTimeout(() => {
+                        s.style.transform = `translate(${left}, -250px) scale(4)`;
+                        s.style.opacity = '0';
+                    }, 50);
+
                     container.appendChild(s);
                     setTimeout(() => s.remove(), 4000);
                 }, i * 50);
             }
         }
     </script>
+    
+    <style>
+        @keyframes rise {
+            0% { transform: translate(0,0) scale(1); opacity: 0.6; }
+            100% { transform: translate(var(--moveX, 20px), -250px) scale(4); opacity: 0; }
+        }
+    </style>
 
 </body>
 </html>
-
